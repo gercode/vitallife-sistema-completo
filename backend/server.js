@@ -16,11 +16,18 @@ const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
 
 // ── Middlewares globales ──────────────────────────────
-app.use(cors({
+/*app.use(cors({
   origin: process.env.FRONTEND_URL || '*',
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'x-admin-token']
 }));
+*/
+
+app.use(cors({
+  origin: true, // ✅ deja que Express devuelva el Origin correcto
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
