@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     settings = { ...settings, ...data };
   } catch (_) { /* usa valores por defecto */ /*}
 }*/
-async function loadSettings() {
+/*async function loadSettings() {
   try {
     const res = await fetch('http://localhost:3001/api/public/settings');
     const data = await res.json();
@@ -32,7 +32,16 @@ async function loadSettings() {
     console.warn('No se pudo cargar configuración pública', err);
   }
 }
-
+*/
+async function loadSettings() {
+  try {
+    const res = await fetch(CONFIG.API_BASE + '/public/settings');
+    const data = await res.json();
+    settings = { ...settings, ...data };
+  } catch (err) {
+    console.warn('No se pudo cargar configuración pública', err);
+  }
+}
 // ── Configurar botones de compartir ───────────────────
 function setupShareButtons() {
   try {
