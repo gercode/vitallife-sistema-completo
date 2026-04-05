@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vital Life – Detalles del Producto</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="public/css/landing.css"/>
+  <style>
+    .product-hero {
+      background: linear-gradient(135deg,#1b4332 0%,#2d6a4f 55%,#40916c 100%);
+      padding: 60px 0;
+      position: relative;
+      overflow: hidden;
+      color: #fff;
+    }
+    .product-hero::before {
+      content:'';position:absolute;inset:0;
+      background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+      pointer-events:none;
+    }
+    .product-hero [class] { position: relative; z-index: 2; }
+    .product-label { color: #b7e4c7; font-size: .9rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px; }
+    .product-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 8px; line-height: 1.2; }
+    .product-brand { color: #b7e4c7; font-size: 1.05rem; margin-bottom: 28px; font-weight: 600; }
+    .product-img-hero { border-radius: 18px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,.12); max-width: 400px; margin: 28px auto; }
+    .product-img-hero img { width: 100%; height: auto; display: block; }
+    .product-benefits-hero { list-style: none; margin: 28px 0; color: #fff; }
+    .product-benefits-hero li { padding: 8px 0; display: flex; align-items: center; gap: 12px; font-size: .95rem; font-weight: 600; }
+    .product-benefits-hero i { color: #95d5b2; font-size: 1.2rem; }
+    .back-btn { color: #fff; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 20px; font-weight: 600; transition: color .2s; }
+    .back-btn:hover { color: #95d5b2; }
+    
+    /* Estilos para descuento */
+    .oferta-badge {
+      background: #910439;
+      color: #ffeb00;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 28px;
+      position: relative;
+      box-shadow: 0 4px 16px rgba(145, 4, 57, 0.2);
+    }
+    .oferta-label {
+      font-size: .85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #ffeb00;
+      margin-bottom: 8px;
+    }
+    .oferta-percent {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #ffeb00;
+      line-height: 1;
+      margin: 12px 0;
+    }
+    .oferta-text {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .precios-section {
+      background: #f8f8f8;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .precio-original {
+      font-size: .95rem;
+      color: #999;
+      text-decoration: line-through;
+      margin-bottom: 8px;
+    }
+    .precio-final {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #2d6a4f;
+      line-height: 1;
+    }
+    .moneda {
+      font-size: 1.2rem;
+      vertical-align: top;
+    }
+    .oferta-form-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    .btn-oferta-submit {
+      width: 100%;
+      background: var(--verde-oscuro, #2d6a4f);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 1rem;
+    }
+    .btn-oferta-submit:hover {
+      background: #1b4332;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(45, 106, 79, .2);
+    }
+    .btn-oferta-submit:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HERO CON DETALLE DEL PRODUCTO ── -->
+<section class="product-hero">
+  <div class="container">
+    <a href="index.html" class="back-btn"><i class="bi bi-chevron-left"></i> Volver</a>
+    
+    <div class="row align-items-center">
+      <!-- Columna izquierda: Producto -->
+      <div class="col-lg-6 mb-4 mb-lg-0">
+        <p class="product-label" id="detailCategory">🌿 Suplemento</p>
+        <h1 class="product-title" id="detailName">Producto</h1>
+        <p class="product-brand" id="detailBrand"></p>
+        <p id="detailDescription" style="font-size: 1.05rem; line-height: 1.6; margin-bottom: 20px;"></p>
+        
+        <div class="product-img-hero">
+          <img id="detailImage" src="" alt="Producto" style="min-height: 300px; object-fit: cover;"/>
+        </div>
+
+        <ul class="product-benefits-hero" id="detailBenefits">
+          <!-- Cargado dinámicamente -->
+        </ul>
+      </div>
+
+      <!-- Columna derecha: Formulario -->
+      <div class="col-lg-6">
+        <!-- Sección de Oferta/Descuento (si existe) -->
+        <div id="ofertaSection" class="d-none">
+          <div class="oferta-badge">
+            <div class="oferta-label">🎯 Gran Oferta</div>
+            <div class="oferta-percent" id="percentDiscount">20%</div>
+            <div class="oferta-text">¡DESCUENTO ESPECIAL!</div>
+          </div>
+
+          <div class="precios-section">
+            <div class="precio-original" id="precioOriginalDisplay"></div>
+            <div class="precio-final">
+              <span class="moneda">$</span><span id="precioFinalDisplay">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="oferta-form-card">
+          <div style="margin-bottom: 24px; text-align: center;">
+            <p class="product-label">COMPRAR PRODUCTO</p>
+            <h2 style="color: var(--verde); font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-top: 8px;">
+              ¿Te interesa este producto?
+            </h2>
+          </div>
+
+          <form id="detailForm" onsubmit="submitDetailForm(event)">
+            <div class="mb-3">
+              <label for="detailNombre" class="form-label">Nombre completo *</label>
+              <input type="text" class="form-control" id="detailNombre" placeholder="Tu nombre" required/>
+            </div>
+
+            <div class="mb-3">
+              <label for="detailTelefono" class="form-label">Celular <span style="font-weight: normal; color: #999;">(opcional)</span></label>
+              <div class="input-group">
+                <span class="input-group-text">🇨🇴 +57</span>
+                <input type="tel" class="form-control" id="detailTelefono" placeholder="300 000 0000" pattern="[0-9]{7,10}"/>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-oferta-submit">
+              <i class="bi bi-send-fill"></i> Comprar ya!
+            </button>
+          </form>
+
+          <p style="text-align: center; color: #999; font-size: .85rem; margin-top: 16px;">
+            🔒 Tu información es privada y no será compartida
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="row align-items-center gy-2">
+      <div class="col-md-4 text-center text-md-start">
+        <span class="footer-brand">Vital<em>Life</em></span>
+      </div>
+      <div class="col-md-4 text-center">
+        <p class="footer-copy mb-0">© 2026 Vital Life · Todos los derechos reservados</p>
+      </div>
+      <div class="col-md-4 text-center text-md-end">
+        <a id="footerWA" href="#" target="_blank" class="footer-link me-3"><i class="bi bi-whatsapp"></i></a>
+        <a id="footerFB" href="#" target="_blank" class="footer-link"><i class="bi bi-facebook"></i></a>
+      </div>
+    </div>
+    <p class="footer-legal text-center mt-2">Los suplementos dietarios no reemplazan una dieta equilibrada ni tratamiento médico.</p>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div class="toast-msg" id="toastMsg"></div>
+
+<!-- Scripts -->
+<script src="public/js/config.js"></script>
+<script src="public/js/api.js"></script>
+<script>
+// Estado global
+let selectedProduct = null;
+let settings = {
+  whatsappNumber: '573001234567',
+  facebookUrl: 'https://www.facebook.com/',
+  siteName: 'Vital Life'
+};
+
+// Inicialización
+document.addEventListener('DOMContentLoaded', async () => {
+  loadProductDetail();
+  await loadSettings();
+  setupShareButtonsDetail();
+});
+
+// Cargar detalle del producto
+function loadProductDetail() {
+  selectedProduct = JSON.parse(sessionStorage.getItem('selectedProduct') || '{}');
+  
+  if (!selectedProduct.id) {
+    document.body.innerHTML = '<div style="padding: 40px; text-align: center;"><p>Producto no encontrado</p><a href="index.html" style="color: var(--verde);">Volver al inicio</a></div>';
+    return;
+  }
+
+  // Llenar datos del producto
+  const categoryIcon = { diabetes: '🩺', articulaciones: '🦴', vitaminas: '💊', general: '🌿' };
+  const icon = categoryIcon[(selectedProduct.category || '').toLowerCase()] || '🌿';
+  
+  document.getElementById('detailCategory').textContent = `${icon} ${selectedProduct.category || 'Suplemento'}`;
+  document.getElementById('detailName').textContent = selectedProduct.name || 'Producto';
+  document.getElementById('detailBrand').textContent = selectedProduct.brand || '';
+  document.getElementById('detailDescription').textContent = selectedProduct.description || '';
+  
+  if (selectedProduct.image) {
+    document.getElementById('detailImage').src = CONFIG.API_BASE.replace('/api', '') + selectedProduct.image;
+  }
+
+  // Beneficios
+  const benefsList = document.getElementById('detailBenefits');
+  benefsList.innerHTML = (selectedProduct.benefits || []).map(b =>
+    `<li><i class="bi bi-check-circle-fill"></i>${b}</li>`
+  ).join('');
+
+  // Mostrar descuento y precios si existen
+  const hasDiscount = selectedProduct.discount && selectedProduct.discount > 0;
+  const hasPrice = selectedProduct.price && selectedProduct.price > 0;
+
+  if (hasPrice && hasDiscount) {
+    const precioOriginal = selectedProduct.price;
+    const descuento = selectedProduct.discount;
+    const precioFinal = precioOriginal - (precioOriginal * descuento / 100);
+
+    document.getElementById('percentDiscount').textContent = `${descuento}%`;
+    document.getElementById('precioOriginalDisplay').textContent = `$${precioOriginal.toLocaleString('es-CO')} COP`;
+    document.getElementById('precioFinalDisplay').textContent = precioFinal.toLocaleString('es-CO');
+    document.getElementById('ofertaSection').classList.remove('d-none');
+  } else if (hasPrice) {
+    // Solo mostrar precio sin descuento
+    document.getElementById('precioFinalDisplay').textContent = selectedProduct.price.toLocaleString('es-CO');
+    document.getElementById('precioOriginalDisplay').parentElement.style.display = 'none';
+    document.getElementById('ofertaSection').classList.remove('d-none');
+  }
+}
+
+// Cargar configuración
+async function loadSettings() {
+  try {
+    const data = await fetch(CONFIG.API_BASE + '/auth/settings').then(r => r.json());
+    settings = { ...settings, ...data };
+  } catch (_) {}
+}
+
+// Setup botones compartir
+function setupShareButtonsDetail() {
+  const pageUrl = encodeURIComponent(window.location.href);
+  const msg = encodeURIComponent(`🌿 Mira este producto: ${selectedProduct.name} en Vital Life`);
+  const waNum = settings.whatsappNumber.replace(/\D/g, '');
+  
+  const setHref = (id, url) => {
+    const el = document.getElementById(id);
+    if (el) el.href = url;
+  };
+  
+  setHref('footerWA', `https://wa.me/${waNum}?text=${msg}`);
+  setHref('footerFB', settings.facebookUrl);
+}
+
+// Enviar formulario
+async function submitDetailForm(event) {
+  event.preventDefault();
+  
+  const nombre = document.getElementById('detailNombre').value.trim();
+  const celular = document.getElementById('detailTelefono').value.trim();
+
+  if (!nombre) {
+    showToast('❌ Completa los campos obligatorios', 'error');
+    return;
+  }
+
+  try {
+    await API.submitLead({
+      name: nombre,
+      email: '',
+      phone: celular,
+      products: [selectedProduct.name],
+      source: 'product-detail'
+    });
+
+    showToast('✅ Solicitud enviada correctamente', 'success');
+    document.getElementById('detailForm').reset();
+    setTimeout(() => window.location.href = 'index.html', 2000);
+  } catch (err) {
+    showToast('❌ Error al enviar. Intenta de nuevo', 'error');
+  }
+}
+
+// Toast
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toastMsg');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

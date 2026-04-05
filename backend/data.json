@@ -1,0 +1,94 @@
+{
+  "products": [
+    {
+      "id": "c51c35e7-7c31-4f1a-b347-36ca61a55b90",
+      "name": "Natsulim",
+      "brand": "Healty America",
+      "category": "diabetes",
+      "description": "Natsulin de Healthy America es un suplemento dietario en cápsulas blandas (60 softgels) diseñado para apoyar el control de los niveles de azúcar en sangre y mejorar la sensibilidad a la insulina. Su fórmula natural incluye cromo, canela, L-glutamina y L-arabinosa, ideal para el metabolismo de la glucosa.",
+      "benefits": [
+        "Regula los nieles de glucosa",
+        "100% natural",
+        "efectivo"
+      ],
+      "image": "/uploads/product-1238d470-8a79-4aeb-ba6f-eb61b72389e9.jpeg",
+      "active": true,
+      "createdAt": "2026-03-31T17:47:04.660Z",
+      "updatedAt": "2026-04-04T20:30:24.901Z",
+      "price": 200000,
+      "discount": 50
+    },
+    {
+      "id": "7618a11d-de8b-49af-87fb-8e828d3381b5",
+      "name": "Natsulim",
+      "brand": "bayer",
+      "category": "diabetes",
+      "description": "Natsulin de Healthy America es un suplemento dietario en cápsulas blandas (60 softgels) diseñado para apoyar el control de los niveles de azúcar en sangre y mejorar la sensibilidad a la insulina. Su fórmula natural incluye cromo, canela, L-glutamina y L-arabinosa, ideal para el metabolismo de la glucosa.",
+      "benefits": [
+        "Apoyo metabólico",
+        "Componentes naturales",
+        "Protección antioxidante"
+      ],
+      "image": null,
+      "price": 160000,
+      "discount": 20,
+      "active": true,
+      "createdAt": "2026-04-04T20:29:04.458Z",
+      "updatedAt": "2026-04-05T03:01:42.207Z"
+    }
+  ],
+  "leads": [
+    {
+      "id": "0ced556e-56e9-4966-907e-1b28ed9c363d",
+      "name": "pepe perez",
+      "email": "correo@correo.com",
+      "phone": "3003335696",
+      "products": [
+        "Natsulin (Diabetes)"
+      ],
+      "source": "landing",
+      "read": true,
+      "createdAt": "2026-03-30T16:47:31.902Z"
+    },
+    {
+      "id": "cd02759f-2002-4d55-9612-fc2bd65eb98e",
+      "name": "gerlem de larosa",
+      "email": "gerlemyessiddelarosa@gmail.com",
+      "phone": "3017295329",
+      "products": [
+        "Natsulim",
+        "vipvapuro"
+      ],
+      "source": "landing",
+      "read": true,
+      "createdAt": "2026-03-31T03:50:57.038Z"
+    },
+    {
+      "id": "4acd2b33-c1a4-4fb2-a27d-a217d702504f",
+      "name": "Pedro Juan",
+      "email": "",
+      "phone": "3046689630",
+      "products": [
+        "Natsulim"
+      ],
+      "source": "product-detail",
+      "read": false,
+      "createdAt": "2026-04-04T21:45:11.716Z"
+    },
+    {
+      "id": "c3295a6e-f54c-4887-935f-90f7503a7e2e",
+      "name": "Jack",
+      "email": "",
+      "phone": "3246598956",
+      "products": [],
+      "source": "landing",
+      "read": false,
+      "createdAt": "2026-04-04T23:59:02.003Z"
+    }
+  ],
+  "settings": {
+    "whatsappNumber": "573001234567",
+    "facebookUrl": "https://www.facebook.com/TuPaginaVitalLife",
+    "siteName": "Vital Life"
+  }
+}

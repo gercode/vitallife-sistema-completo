@@ -1,0 +1,102 @@
+========================================
+GUÍA DE INSTALACIÓN - NODE.JS
+========================================
+
+PASO 1: DESCARGAR NODE.JS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Abre tu navegador y ve a:
+   https://nodejs.org/
+
+2. Verás dos botones grandes:
+   - "LTS" (recomendado) 
+   - "Current"
+   
+   ➜ HACED CLIC EN "LTS"
+
+3. Se descargará un archivo .msi
+   (Por ejemplo: node-v18.19.0-win-x64.msi)
+
+4. El archivo se guarda en tu carpeta de Descargas
+
+
+PASO 2: INSTALAR NODE.JS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Ve a tu carpeta de Descargas
+2. Busca el archivo "node-v18.19.0-win-x64.msi" (o similar)
+3. Haz DOBLE CLIC en el archivo
+
+4. Se abrirá el instalador. Verás:
+   ✓ "Next" en la primera pantalla
+   ✓ Acepta términos y condiciones
+   ✓ Elige carpeta (por defecto está bien)
+   ✓ En opciones, asegúrate que esté marcado:
+     - "npm package manager"
+     - "Add to PATH" ⚠️ IMPORTANTE
+   ✓ Haz clic en "Install"
+
+5. Espera a que termine la instalación
+6. Verás "Completed" y puedes cerrar
+
+
+PASO 3: REINICIAR POWERSHELL ⚠️ IMPORTANTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Cierra completamente PowerShell:
+   - Haz clic en el X de la ventana
+
+2. Abre una NUEVA ventana de PowerShell:
+   - Presiona Windows + R
+   - Escribe: powershell
+   - Presiona ENTER
+
+
+PASO 4: VERIFICAR INSTALACIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+En la NUEVA ventana de PowerShell, ejecuta:
+
+  node --version
+  npm --version
+
+Si ves números de versión, ¡está instalado! ✓
+
+
+PASO 5: INSTALAR DEPENDENCIAS DEL PROYECTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+En PowerShell, ve a tu proyecto:
+
+  cd "c:\Users\gercode\Downloads\vitallife-sistema-completo\backend"
+  npm install
+
+Espera a que termine (2-3 minutos aproximadamente).
+
+
+PASO 6: EJECUTAR EL PROYECTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+En la misma carpeta backend:
+
+  npm start
+
+Deberías ver algo como:
+  🌿 VitalLife API corriendo en http://localhost:3001
+
+
+========================================
+¿Problemas?
+========================================
+
+❌ "npm no se reconoce"
+→ Cierra powershell y abre una NUEVA ventana
+
+❌ "No se puede conectar"
+→ Verifica que npm start esté ejecutándose
+
+❌ "EACCES permission denied"
+→ Ejecuta PowerShell como Administrador
+
+Para más ayuda, revisa:
+./INICIO.md

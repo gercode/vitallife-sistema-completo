@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin – Vital Life</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../../public/css/admin.css"/>
+</head>
+<body>
+
+<!-- ══ LOGIN OVERLAY ══════════════════════════════════════ -->
+<div id="loginOverlay" class="login-overlay">
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="brand-text">Vital<em>Life</em></span>
+      <span class="login-sub">Panel Administrativo</span>
+    </div>
+    <div id="loginError" class="alert alert-danger d-none" role="alert"></div>
+    <div class="mb-3">
+      <label class="form-label">Usuario</label>
+      <input type="text" class="form-control" id="loginUser" placeholder="admin" autocomplete="username"/>
+    </div>
+    <div class="mb-4">
+      <label class="form-label">Contraseña</label>
+      <input type="password" class="form-control" id="loginPass" placeholder="••••••••" autocomplete="current-password"/>
+    </div>
+    <button class="btn-login" id="loginBtn" onclick="doLogin()">
+      <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+    </button>
+  </div>
+</div>
+
+<!-- ══ LAYOUT PRINCIPAL ═══════════════════════════════════ -->
+<div id="appShell" class="d-none">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="brand-text">Vital<em>Life</em></span>
+      <button class="sidebar-close d-lg-none" onclick="toggleSidebar()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+      <a class="nav-item active" data-view="dashboard" onclick="navigate('dashboard',this)">
+        <i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span>
+      </a>
+      <a class="nav-item" data-view="products" onclick="navigate('products',this)">
+        <i class="bi bi-box-seam-fill"></i><span>Productos</span>
+      </a>
+      <a class="nav-item" data-view="leads" onclick="navigate('leads',this)">
+        <i class="bi bi-envelope-fill"></i><span>Notificaciones</span>
+        <span class="badge-unread" id="sidebarBadge">0</span>
+      </a>
+      <a class="nav-item" data-view="settings" onclick="navigate('settings',this)">
+        <i class="bi bi-gear-fill"></i><span>Configuración</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="doLogout()">
+        <i class="bi bi-box-arrow-left"></i><span>Cerrar sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Overlay móvil -->
+  <div class="sidebar-backdrop d-none" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
+
+  <!-- Main -->
+  <div class="main-wrap">
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="topbar-toggle d-lg-none" onclick="toggleSidebar()">
+        <i class="bi bi-list fs-4"></i>
+      </button>
+      <h1 class="topbar-title" id="topbarTitle">Dashboard</h1>
+      <div class="topbar-right">
+        <span class="topbar-time" id="topbarTime"></span>
+        <div class="topbar-avatar">AD</div>
+      </div>
+    </header>
+
+    <!-- Vistas -->
+    <main class="main-content">
+
+      <!-- ── VIEW: DASHBOARD ── -->
+      <section id="view-dashboard" class="view active">
+        <div class="row g-4 mb-4">
+          <div class="col-6 col-xl-3">
+            <div class="stat-card stat-green">
+              <i class="bi bi-box-seam stat-icon"></i>
+              <div class="stat-val" id="statProducts">—</div>
+              <div class="stat-label">Productos activos</div>
+            </div>
+          </div>
+          <div class="col-6 col-xl-3">
+            <div class="stat-card stat-blue">
+              <i class="bi bi-people stat-icon"></i>
+              <div class="stat-val" id="statLeads">—</div>
+              <div class="stat-label">Leads totales</div>
+            </div>
+          </div>
+          <div class="col-6 col-xl-3">
+            <div class="stat-card stat-orange">
+              <i class="bi bi-envelope-exclamation stat-icon"></i>
+              <div class="stat-val" id="statUnread">—</div>
+              <div class="stat-label">Sin leer</div>
+            </div>
+          </div>
+          <div class="col-6 col-xl-3">
+            <div class="stat-card stat-red">
+              <i class="bi bi-calendar-check stat-icon"></i>
+              <div class="stat-val" id="statToday">—</div>
+              <div class="stat-label">Hoy</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Últimos leads -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3 class="panel-title"><i class="bi bi-clock-history me-2"></i>Últimos registros</h3>
+            <button class="btn-sm-action" onclick="navigate('leads',document.querySelector('[data-view=leads]'))">Ver todos</button>
+          </div>
+          <div class="panel-body p-0">
+            <div class="table-responsive">
+              <table class="admin-table" id="dashboardLeadsTable">
+                <thead><tr><th>Nombre</th><th>Correo</th><th>Fecha</th><th>Estado</th></tr></thead>
+                <tbody id="dashboardLeadsTbody"><tr><td colspan="4" class="text-center py-3">Cargando...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── VIEW: PRODUCTOS ── -->
+      <section id="view-products" class="view">
+        <div class="view-header">
+          <h2 class="view-title">Productos</h2>
+          <button class="btn-primary-action" onclick="openProductModal()">
+            <i class="bi bi-plus-lg me-1"></i>Nuevo producto
+          </button>
+        </div>
+        <div id="productsAdminGrid" class="products-grid">
+          <div class="text-center py-5"><div class="spinner-border text-success"></div></div>
+        </div>
+      </section>
+
+      <!-- ── VIEW: LEADS / NOTIFICACIONES ── -->
+      <section id="view-leads" class="view">
+        <div class="view-header">
+          <h2 class="view-title">Notificaciones <span class="badge-unread ms-2" id="leadsHeaderBadge">0</span></h2>
+          <button class="btn-outline-action" onclick="markAllRead()">
+            <i class="bi bi-check2-all me-1"></i>Marcar todo leído
+          </button>
+        </div>
+
+        <!-- Filtros -->
+        <div class="leads-filters mb-3">
+          <button class="filter-btn active" data-filter="all"    onclick="filterLeads('all',this)">Todos</button>
+          <button class="filter-btn"         data-filter="unread" onclick="filterLeads('unread',this)">Sin leer</button>
+          <button class="filter-btn"         data-filter="read"   onclick="filterLeads('read',this)">Leídos</button>
+        </div>
+
+        <div id="leadsContainer">
+          <div class="text-center py-5"><div class="spinner-border text-success"></div></div>
+        </div>
+      </section>
+
+      <!-- ── VIEW: CONFIGURACIÓN ── -->
+      <section id="view-settings" class="view">
+        <div class="view-header"><h2 class="view-title">Configuración</h2></div>
+        <div class="panel" style="max-width:600px;">
+          <div class="panel-header"><h3 class="panel-title"><i class="bi bi-gear me-2"></i>Ajustes generales</h3></div>
+          <div class="panel-body">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Nombre del sitio</label>
+              <input type="text" class="form-control" id="cfgSiteName" placeholder="Vital Life"/>
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Número de WhatsApp <small class="text-muted">(sin + ni espacios)</small></label>
+              <input type="text" class="form-control" id="cfgWhatsapp" placeholder="573001234567"/>
+            </div>
+            <div class="mb-4">
+              <label class="form-label fw-bold">URL de Facebook</label>
+              <input type="url" class="form-control" id="cfgFacebook" placeholder="https://www.facebook.com/TuPagina"/>
+            </div>
+            <button class="btn-primary-action" onclick="saveSettings()">
+              <i class="bi bi-save me-1"></i>Guardar cambios
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main><!-- /main-content -->
+  </div><!-- /main-wrap -->
+</div><!-- /appShell -->
+
+<!-- ═══ MODAL PRODUCTO ════════════════════════════════════ -->
+<div class="modal fade" id="productModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title fw-bold" id="productModalTitle">Nuevo producto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editProductId"/>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Nombre *</label>
+            <input type="text" class="form-control" id="pName" placeholder="Ej: Natsulin"/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Marca</label>
+            <input type="text" class="form-control" id="pBrand" placeholder="Ej: Healthy America"/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Categoría</label>
+            <select class="form-select" id="pCategory">
+              <option value="diabetes">Diabetes</option>
+              <option value="articulaciones">Articulaciones</option>
+              <option value="vitaminas">Vitaminas</option>
+              <option value="general">General</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Estado</label>
+            <select class="form-select" id="pActive">
+              <option value="true">Activo (visible en el sitio)</option>
+              <option value="false">Inactivo (oculto)</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Precio <small class="text-muted">(opcional)</small></label>
+            <input type="number" class="form-control" id="pPrice" placeholder="0.00" step="0.01" min="0"/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Descuento <small class="text-muted">% (opcional)</small></label>
+            <input type="number" class="form-control" id="pDiscount" placeholder="0" step="0.01" min="0" max="100"/>
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-bold">Descripción</label>
+            <textarea class="form-control" id="pDesc" rows="3" placeholder="Descripción del producto..."></textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-bold">Beneficios <small class="text-muted">(uno por línea)</small></label>
+            <textarea class="form-control" id="pBenefits" rows="4" placeholder="Regula los niveles de glucosa&#10;Apoya la función del páncreas&#10;100% natural"></textarea>
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-bold">Imagen del producto</label>
+            <div class="image-upload-area" id="imageUploadArea" onclick="document.getElementById('pImage').click()">
+              <img id="imagePreview" src="" alt="" class="d-none"/>
+              <div id="imageUploadPlaceholder">
+                <i class="bi bi-cloud-arrow-up fs-2 text-muted"></i>
+                <p class="mb-0 text-muted mt-1">Haz clic o arrastra una imagen aquí</p>
+                <small class="text-muted">JPG, PNG, WEBP — máx. 5MB</small>
+              </div>
+            </div>
+            <input type="file" id="pImage" accept="image/*" class="d-none" onchange="previewImage(this)"/>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button class="btn-primary-action" id="saveProductBtn" onclick="saveProduct()">
+          <i class="bi bi-save me-1"></i>Guardar producto
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL LEAD DETALLE ════════════════════════════════ -->
+<div class="modal fade" id="leadModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold">Detalle del registro</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="leadModalBody"></div>
+      <div class="modal-footer border-0">
+        <button class="btn btn-light" data-bs-dismiss="modal">Cerrar</button>
+        <a id="leadWABtn" href="#" target="_blank" class="btn-wa-contact">
+          <i class="bi bi-whatsapp me-1"></i>Contactar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="admin-toast" id="adminToast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../public/js/config.js"></script>
+<script src="../../public/js/api.js"></script>
+<script src="../../public/js/admin.js"></script>
+</body>
+</html>

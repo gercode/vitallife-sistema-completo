@@ -1,0 +1,6 @@
+<svg width="280" height="56" viewBox="0 0 280 56" xmlns="http://www.w3.org/2000/svg">
+  <!-- Texto VitalLife - sin fondo -->
+  <text x="140" y="40" font-family="'Playfair Display', Georgia, serif" font-size="38" font-weight="700" fill="white" text-anchor="middle">
+    Vital<tspan font-style="italic" letter-spacing="0" opacity="0.5">Life</tspan>
+  </text>
+</svg>
