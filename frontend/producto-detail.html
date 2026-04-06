@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadSettings();
   setupShareButtonsDetail();
 });
-
+/*
 // Cargar detalle del producto
 function loadProductDetail() {
   selectedProduct = JSON.parse(sessionStorage.getItem('selectedProduct') || '{}');
@@ -246,6 +246,37 @@ function loadProductDetail() {
     document.body.innerHTML = '<div style="padding: 40px; text-align: center;"><p>Producto no encontrado</p><a href="index.html" style="color: var(--verde);">Volver al inicio</a></div>';
     return;
   }
+*/
+// Cargar detalle del producto desde la URL
+async function loadProductDetail() {
+  const params = new URLSearchParams(window.location.search);
+  const productId = params.get('id');
+
+  if (!productId) {
+    showNotFound();
+    return;
+  }
+
+  try {
+    const res = await fetch(`${CONFIG.API_BASE}/products/${productId}`);
+    if (!res.ok) throw new Error('Producto no encontrado');
+
+    selectedProduct = await res.json();
+    renderProduct(selectedProduct);
+  } catch (err) {
+    showNotFound();
+  }
+}
+
+function showNotFound() {
+  document.body.innerHTML = `
+    <div style="padding: 40px; text-align: center;">
+      <p>Producto no encontrado</p>
+      <a href="index.html" style="color: var(--verde);">Volver al inicio</a>
+    </div>
+  `;
+}
+document.addEventListener('DOMContentLoaded', loadProductDetail);
 
   // Llenar datos del producto
   const categoryIcon = { diabetes: '🩺', articulaciones: '🦴', vitaminas: '💊', general: '🌿' };
@@ -285,7 +316,7 @@ function loadProductDetail() {
     document.getElementById('precioOriginalDisplay').parentElement.style.display = 'none';
     document.getElementById('ofertaSection').classList.remove('d-none');
   }
-}
+
 
 // Cargar configuración
 async function loadSettings() {
