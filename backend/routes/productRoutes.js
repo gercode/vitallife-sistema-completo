@@ -1,4 +1,4 @@
-/**
+  /**
  * routes/productRoutes.js
  */
 const express = require('express');

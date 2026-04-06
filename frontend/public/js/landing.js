@@ -136,7 +136,7 @@ function renderProductCard(p) {
   </div>`;
 }
 
-function viewProductDetail(productId) {
+/*function viewProductDetail(productId) {
   // Guardar en sessionStorage y redirigir
   const product = allProducts.find(p => p.id === productId);
   if (product) {
@@ -144,6 +144,11 @@ function viewProductDetail(productId) {
     window.location.href = 'producto-detail.html';
   }
 }
+*/
+function viewProductDetail(productId) {
+  window.location.href = `producto-detail.html?id=${productId}`;
+}
+
 
 function categoryIcon(cat) {
   const icons = { diabetes: '🩺', articulaciones: '🦴', vitaminas: '💊', general: '🌿' };
