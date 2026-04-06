@@ -276,34 +276,34 @@ function showNotFound() {
     </div>
   `;
 }
-document.addEventListener('DOMContentLoaded', loadProductDetail);
 
+function renderProduct(product) {
   // Llenar datos del producto
   const categoryIcon = { diabetes: '🩺', articulaciones: '🦴', vitaminas: '💊', general: '🌿' };
-  const icon = categoryIcon[(selectedProduct.category || '').toLowerCase()] || '🌿';
+  const icon = categoryIcon[(product.category || '').toLowerCase()] || '🌿';
   
-  document.getElementById('detailCategory').textContent = `${icon} ${selectedProduct.category || 'Suplemento'}`;
-  document.getElementById('detailName').textContent = selectedProduct.name || 'Producto';
-  document.getElementById('detailBrand').textContent = selectedProduct.brand || '';
-  document.getElementById('detailDescription').textContent = selectedProduct.description || '';
+  document.getElementById('detailCategory').textContent = `${icon} ${product.category || 'Suplemento'}`;
+  document.getElementById('detailName').textContent = product.name || 'Producto';
+  document.getElementById('detailBrand').textContent = product.brand || '';
+  document.getElementById('detailDescription').textContent = product.description || '';
   
-  if (selectedProduct.image) {
-    document.getElementById('detailImage').src = CONFIG.API_BASE.replace('/api', '') + selectedProduct.image;
+  if (product.image) {
+    document.getElementById('detailImage').src = CONFIG.API_BASE.replace('/api', '') + product.image;
   }
 
   // Beneficios
   const benefsList = document.getElementById('detailBenefits');
-  benefsList.innerHTML = (selectedProduct.benefits || []).map(b =>
+  benefsList.innerHTML = (product.benefits || []).map(b =>
     `<li><i class="bi bi-check-circle-fill"></i>${b}</li>`
   ).join('');
 
   // Mostrar descuento y precios si existen
-  const hasDiscount = selectedProduct.discount && selectedProduct.discount > 0;
-  const hasPrice = selectedProduct.price && selectedProduct.price > 0;
+  const hasDiscount = product.discount && product.discount > 0;
+  const hasPrice = product.price && product.price > 0;
 
   if (hasPrice && hasDiscount) {
-    const precioOriginal = selectedProduct.price;
-    const descuento = selectedProduct.discount;
+    const precioOriginal = product.price;
+    const descuento = product.discount;
     const precioFinal = precioOriginal - (precioOriginal * descuento / 100);
 
     document.getElementById('percentDiscount').textContent = `${descuento}%`;
@@ -312,10 +312,11 @@ document.addEventListener('DOMContentLoaded', loadProductDetail);
     document.getElementById('ofertaSection').classList.remove('d-none');
   } else if (hasPrice) {
     // Solo mostrar precio sin descuento
-    document.getElementById('precioFinalDisplay').textContent = selectedProduct.price.toLocaleString('es-CO');
+    document.getElementById('precioFinalDisplay').textContent = product.price.toLocaleString('es-CO');
     document.getElementById('precioOriginalDisplay').parentElement.style.display = 'none';
     document.getElementById('ofertaSection').classList.remove('d-none');
   }
+}
 
 
 // Cargar configuración
@@ -328,6 +329,7 @@ async function loadSettings() {
 
 // Setup botones compartir
 function setupShareButtonsDetail() {
+  if (!selectedProduct) return;
   const pageUrl = encodeURIComponent(window.location.href);
   const msg = encodeURIComponent(`🌿 Mira este producto: ${selectedProduct.name} en Vital Life`);
   const waNum = settings.whatsappNumber.replace(/\D/g, '');

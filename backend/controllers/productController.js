@@ -17,7 +17,7 @@ exports.getOne = (req, res) => {
 };
 */
 exports.getOne = (req, res) => {
-  const id = parseInt(req.params.id, 10);
+  const id = req.params.id;
   const p = Product.findById(id);
 
   if (!p) {
