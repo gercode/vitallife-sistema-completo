@@ -9,10 +9,21 @@ const fs      = require('fs');
 exports.getAll = (req, res) => {
   res.json(Product.findAll());
 };
-
+/*
 exports.getOne = (req, res) => {
   const p = Product.findById(req.params.id);
   if (!p) return res.status(404).json({ error: 'Producto no encontrado' });
+  res.json(p);
+};
+*/
+exports.getOne = (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const p = Product.findById(id);
+
+  if (!p) {
+    return res.status(404).json({ error: 'Producto no encontrado' });
+  }
+
   res.json(p);
 };
 
