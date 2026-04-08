@@ -363,7 +363,7 @@
 // Estado global
 let selectedProduct = null;
 let settings = {
-  whatsappNumber: '573001234567',
+  whatsappNumber: '573113804930',
   facebookUrl: 'https://www.facebook.com/',
   siteName: 'Vital Life'
 };
@@ -546,9 +546,15 @@ async function submitDetailForm(event) {
       source: 'product-detail'
     });
 
-    showToast('✅ Solicitud enviada correctamente', 'success');
+    showToast('✅ Redirigiendo a WhatsApp...', 'success');
     document.getElementById('detailForm').reset();
-    setTimeout(() => window.location.href = 'index.html', 2000);
+
+    // Redirigir a WhatsApp con el número configurado
+    const waNum = settings.whatsappNumber.replace(/\D/g, '');
+    const waMsg = encodeURIComponent(`Hola, estoy interesado en el producto: ${selectedProduct.name}. Mi nombre es ${nombre}.${celular ? ' Mi celular: ' + celular : ''}`);
+    setTimeout(() => {
+      window.open(`https://wa.me/${waNum}?text=${waMsg}`, '_blank');
+    }, 1000);
   } catch (err) {
     showToast('❌ Error al enviar. Intenta de nuevo', 'error');
   }
