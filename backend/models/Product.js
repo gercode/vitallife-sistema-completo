@@ -15,7 +15,7 @@ const Product = {
     return db.get().products.find(p => p.id === id) || null;
   },
 
-  create({ name, brand, category, description, benefits, image, price, discount, active = true }) {
+  create({ name, brand, category, description, benefits, image, price, discount, active = true, infoSection }) {
     const product = {
       id:          uuidv4(),
       name:        name || '',
@@ -27,6 +27,7 @@ const Product = {
       price:       parseFloat(price) || 0,
       discount:    parseFloat(discount) || 0,
       active:      Boolean(active),
+      infoSection: infoSection || null,
       createdAt:   new Date().toISOString()
     };
     db.get().products.push(product);

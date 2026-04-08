@@ -241,6 +241,37 @@ function openProductModal(product = null) {
     plch.classList.remove('d-none');
   }
 
+  // Info Section
+  const info = product?.infoSection || {};
+  document.getElementById('pInfoTitle').value     = info.title || '';
+  document.getElementById('pInfoSubtitle').value  = info.subtitle || '';
+  document.getElementById('pInfoDesc').value      = info.description || '';
+  document.getElementById('pInfoTechLabel').value = info.techLabel || '';
+  document.getElementById('pInfoTechName').value  = info.techName || '';
+  document.getElementById('pInfoItems').value     = (info.items || []).join('\n');
+  document.getElementById('pInfoImage').value     = '';
+  const infoPrev = document.getElementById('infoImagePreview');
+  const infoPlch = document.getElementById('infoImageUploadPlaceholder');
+  if (info.image) {
+    infoPrev.src = CONFIG.API_BASE.replace('/api','') + info.image;
+    infoPrev.classList.remove('d-none');
+    infoPlch.classList.add('d-none');
+  } else {
+    infoPrev.src = '';
+    infoPrev.classList.add('d-none');
+    infoPlch.classList.remove('d-none');
+  }
+  // Collapse info section by default, expand if has data
+  const infoFields = document.getElementById('infoSectionFields');
+  const infoIcon = document.getElementById('infoSectionToggleIcon');
+  if (info.title || info.subtitle || info.techName) {
+    infoFields.classList.remove('d-none');
+    infoIcon.className = 'bi bi-chevron-up';
+  } else {
+    infoFields.classList.add('d-none');
+    infoIcon.className = 'bi bi-chevron-down';
+  }
+
   productModal.show();
 }
 
@@ -270,6 +301,38 @@ async function saveProduct() {
   fd.append('benefits',    JSON.stringify(benefits));
   const file = document.getElementById('pImage').files[0];
   if (file) fd.append('image', file);
+
+  // Info Section
+  const infoTitle    = document.getElementById('pInfoTitle').value.trim();
+  const infoSubtitle = document.getElementById('pInfoSubtitle').value.trim();
+  const infoDesc     = document.getElementById('pInfoDesc').value.trim();
+  const infoTechLabel= document.getElementById('pInfoTechLabel').value.trim();
+  const infoTechName = document.getElementById('pInfoTechName').value.trim();
+  const infoItems    = document.getElementById('pInfoItems').value.split('\n').map(i => i.trim()).filter(Boolean);
+
+  if (infoTitle || infoSubtitle || infoTechName || infoItems.length) {
+    // Preserve existing image path if no new image
+    let existingInfoImage = null;
+    if (id) {
+      try {
+        const existing = await API.getProduct(id);
+        existingInfoImage = existing?.infoSection?.image || null;
+      } catch (_) {}
+    }
+    fd.append('infoSection', JSON.stringify({
+      title: infoTitle,
+      subtitle: infoSubtitle,
+      description: infoDesc,
+      techLabel: infoTechLabel,
+      techName: infoTechName,
+      items: infoItems,
+      image: existingInfoImage
+    }));
+  } else {
+    fd.append('infoSection', 'null');
+  }
+  const infoFile = document.getElementById('pInfoImage').files[0];
+  if (infoFile) fd.append('infoSectionImage', infoFile);
 
   const btn = document.getElementById('saveProductBtn');
   btn.disabled = true;
@@ -330,6 +393,46 @@ function setupImageDrop() {
       previewImage(input);
     }
   });
+
+  // Drag & drop para imagen de sección informativa
+  const infoArea = document.getElementById('infoImageUploadArea');
+  if (!infoArea) return;
+  infoArea.addEventListener('dragover', e => { e.preventDefault(); infoArea.style.borderColor = '#2d6a4f'; });
+  infoArea.addEventListener('dragleave', () => { infoArea.style.borderColor = ''; });
+  infoArea.addEventListener('drop', e => {
+    e.preventDefault(); infoArea.style.borderColor = '';
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const input = document.getElementById('pInfoImage');
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      input.files = dt.files;
+      previewInfoImage(input);
+    }
+  });
+}
+
+// Toggle sección informativa
+function toggleInfoSection() {
+  const fields = document.getElementById('infoSectionFields');
+  const icon = document.getElementById('infoSectionToggleIcon');
+  fields.classList.toggle('d-none');
+  icon.className = fields.classList.contains('d-none') ? 'bi bi-chevron-down' : 'bi bi-chevron-up';
+}
+
+// Preview imagen de sección informativa
+function previewInfoImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('infoImagePreview');
+    const plch = document.getElementById('infoImageUploadPlaceholder');
+    prev.src = e.target.result;
+    prev.classList.remove('d-none');
+    plch.classList.add('d-none');
+  };
+  reader.readAsDataURL(file);
 }
 
 // ── LEADS / NOTIFICACIONES ────────────────────────────

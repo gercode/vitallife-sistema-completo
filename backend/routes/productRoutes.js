@@ -31,8 +31,12 @@ router.get('/', ctrl.getAll);
 router.get('/:id', ctrl.getOne);
 
 // Rutas protegidas (admin)
-router.post('/',     authMiddleware, upload.single('image'), ctrl.create);
-router.put('/:id',  authMiddleware, upload.single('image'), ctrl.update);
+const uploadFields = upload.fields([
+  { name: 'image', maxCount: 1 },
+  { name: 'infoSectionImage', maxCount: 1 }
+]);
+router.post('/',     authMiddleware, uploadFields, ctrl.create);
+router.put('/:id',  authMiddleware, uploadFields, ctrl.update);
 router.delete('/:id', authMiddleware, ctrl.remove);
 
 module.exports = router;

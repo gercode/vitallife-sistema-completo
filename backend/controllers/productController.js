@@ -34,9 +34,29 @@ exports.create = (req, res) => {
     let benefits = [];
     try { benefits = JSON.parse(req.body.benefits || '[]'); } catch (_) {}
 
-    const image = req.file ? `/uploads/${req.file.filename}` : null;
+    // infoSection puede venir como JSON string
+    let infoSection = null;
+    try {
+      const parsed = JSON.parse(req.body.infoSection || 'null');
+      if (parsed) {
+        infoSection = {
+          title:       parsed.title || '',
+          subtitle:    parsed.subtitle || '',
+          description: parsed.description || '',
+          techLabel:   parsed.techLabel || '',
+          techName:    parsed.techName || '',
+          items:       Array.isArray(parsed.items) ? parsed.items : [],
+          image:       parsed.image || null
+        };
+      }
+    } catch (_) {}
 
-    const product = Product.create({ name, brand, category, description, benefits, image, price, discount, active });
+    const image = req.files?.image?.[0] ? `/uploads/${req.files.image[0].filename}` : null;
+    if (infoSection && req.files?.infoSectionImage?.[0]) {
+      infoSection.image = `/uploads/${req.files.infoSectionImage[0].filename}`;
+    }
+
+    const product = Product.create({ name, brand, category, description, benefits, image, price, discount, active, infoSection });
     res.status(201).json(product);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -48,8 +68,35 @@ exports.update = (req, res) => {
     let benefits = [];
     try { benefits = JSON.parse(req.body.benefits || '[]'); } catch (_) {}
 
+    // infoSection puede venir como JSON string
+    let infoSection = undefined;
+    if (req.body.infoSection !== undefined) {
+      try {
+        const parsed = JSON.parse(req.body.infoSection || 'null');
+        if (parsed) {
+          infoSection = {
+            title:       parsed.title || '',
+            subtitle:    parsed.subtitle || '',
+            description: parsed.description || '',
+            techLabel:   parsed.techLabel || '',
+            techName:    parsed.techName || '',
+            items:       Array.isArray(parsed.items) ? parsed.items : [],
+            image:       parsed.image || null
+          };
+        } else {
+          infoSection = null;
+        }
+      } catch (_) {}
+    }
+
     const data = { ...req.body, benefits };
-    if (req.file) data.image = `/uploads/${req.file.filename}`;
+    if (infoSection !== undefined) data.infoSection = infoSection;
+    delete data.infoSectionImage;
+
+    if (req.files?.image?.[0]) data.image = `/uploads/${req.files.image[0].filename}`;
+    if (infoSection && req.files?.infoSectionImage?.[0]) {
+      data.infoSection.image = `/uploads/${req.files.infoSectionImage[0].filename}`;
+    }
     if (data.active !== undefined) data.active = data.active === 'true' || data.active === true;
     if (data.price !== undefined) data.price = parseFloat(data.price) || 0;
     if (data.discount !== undefined) data.discount = parseFloat(data.discount) || 0;
