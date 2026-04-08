@@ -117,6 +117,32 @@
     .btn-oferta-submit:active {
       transform: translateY(0);
     }
+    .btn-whatsapp-contact {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      background: #25d366;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      margin-top: 12px;
+      transition: all .3s ease;
+    }
+    .btn-whatsapp-contact:hover {
+      background: #1ebe5d;
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 211, 102, .3);
+    }
+    .btn-whatsapp-contact i {
+      font-size: 1.2rem;
+    }
 
     /* ── Sección Informativa ── */
     .info-section {
@@ -285,6 +311,10 @@
               <i class="bi bi-send-fill"></i> Comprar ya!
             </button>
           </form>
+
+          <a id="whatsappBtn" href="#" target="_blank" class="btn-whatsapp-contact">
+            <i class="bi bi-whatsapp"></i> Escríbenos por WhatsApp
+          </a>
 
           <p style="text-align: center; color: #999; font-size: .85rem; margin-top: 16px;">
             🔒 Tu información es privada y no será compartida
@@ -523,6 +553,10 @@ function setupShareButtonsDetail() {
   
   setHref('footerWA', `https://wa.me/${waNum}?text=${msg}`);
   setHref('footerFB', settings.facebookUrl);
+
+  // Botón principal de WhatsApp
+  const waContact = encodeURIComponent(`Hola, estoy interesado en el producto: ${selectedProduct.name}`);
+  setHref('whatsappBtn', `https://wa.me/${waNum}?text=${waContact}`);
 }
 
 // Enviar formulario
@@ -546,15 +580,8 @@ async function submitDetailForm(event) {
       source: 'product-detail'
     });
 
-    showToast('✅ Redirigiendo a WhatsApp...', 'success');
+    showToast('✅ Solicitud enviada correctamente', 'success');
     document.getElementById('detailForm').reset();
-
-    // Redirigir a WhatsApp con el número configurado
-    const waNum = settings.whatsappNumber.replace(/\D/g, '');
-    const waMsg = encodeURIComponent(`Hola, estoy interesado en el producto: ${selectedProduct.name}. Mi nombre es ${nombre}.${celular ? ' Mi celular: ' + celular : ''}`);
-    setTimeout(() => {
-      window.open(`https://wa.me/${waNum}?text=${waMsg}`, '_blank');
-    }, 1000);
   } catch (err) {
     showToast('❌ Error al enviar. Intenta de nuevo', 'error');
   }
