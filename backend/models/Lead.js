@@ -1,55 +1,90 @@
 /**
  * models/Lead.js
- * Modelo de Lead (registro del formulario público)
+ * Modelo de Lead – Supabase (PostgreSQL)
  */
-const { v4: uuidv4 } = require('uuid');
-const db = require('../config/db');
+const supabase = require('../config/db');
+
+const TABLE = 'leads';
+
+function toCamel(row) {
+  if (!row) return null;
+  return {
+    id:        row.id,
+    name:      row.name,
+    email:     row.email,
+    phone:     row.phone,
+    products:  row.products || [],
+    source:    row.source,
+    read:      row.read,
+    createdAt: row.created_at
+  };
+}
 
 const Lead = {
 
-  findAll() {
-    // Más recientes primero
-    return [...db.get().leads].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  async findAll() {
+    const { data, error } = await supabase
+      .from(TABLE)
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return (data || []).map(toCamel);
   },
 
-  findById(id) {
-    return db.get().leads.find(l => l.id === id) || null;
+  async findById(id) {
+    const { data, error } = await supabase
+      .from(TABLE)
+      .select('*')
+      .eq('id', id)
+      .single();
+    if (error && error.code !== 'PGRST116') throw error;
+    return toCamel(data);
   },
 
-  create({ name, email, phone, products, source }) {
-    const lead = {
-      id:       uuidv4(),
+  async create({ name, email, phone, products, source }) {
+    const row = {
       name:     name || '',
       email:    email || '',
       phone:    phone || '',
       products: Array.isArray(products) ? products : [],
-      source:   source || 'web',
-      read:     false,
-      createdAt: new Date().toISOString()
+      source:   source || 'web'
     };
-    db.get().leads.push(lead);
-    db.save();
-    return lead;
+    const { data, error } = await supabase
+      .from(TABLE)
+      .insert(row)
+      .select()
+      .single();
+    if (error) throw error;
+    return toCamel(data);
   },
 
-  markRead(id) {
-    const idx = db.get().leads.findIndex(l => l.id === id);
-    if (idx === -1) return null;
-    db.get().leads[idx].read = true;
-    db.save();
-    return db.get().leads[idx];
+  async markRead(id) {
+    const { data, error } = await supabase
+      .from(TABLE)
+      .update({ read: true })
+      .eq('id', id)
+      .select()
+      .single();
+    if (error && error.code !== 'PGRST116') throw error;
+    return toCamel(data);
   },
 
-  delete(id) {
-    const idx = db.get().leads.findIndex(l => l.id === id);
-    if (idx === -1) return false;
-    db.get().leads.splice(idx, 1);
-    db.save();
+  async delete(id) {
+    const { error } = await supabase
+      .from(TABLE)
+      .delete()
+      .eq('id', id);
+    if (error) throw error;
     return true;
   },
 
-  countUnread() {
-    return db.get().leads.filter(l => !l.read).length;
+  async countUnread() {
+    const { count, error } = await supabase
+      .from(TABLE)
+      .select('*', { count: 'exact', head: true })
+      .eq('read', false);
+    if (error) throw error;
+    return count || 0;
   }
 };
 

@@ -1,41 +1,17 @@
 /**
  * config/db.js
- * Base de datos en memoria + persistencia JSON (sin dependencias externas)
- * En producción reemplaza por MongoDB, PostgreSQL, etc.
+ * Cliente Supabase (PostgreSQL + Storage)
  */
-const fs   = require('fs');
-const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 
-const DB_PATH = path.join(__dirname, '..', 'data.json');
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
-// Estado inicial
-const DEFAULT = {
-  products: [],
-  leads: [],
-  settings: {
-    whatsappNumber: process.env.WHATSAPP_NUMBER || '573001234567',
-    facebookUrl:    process.env.FACEBOOK_PAGE_URL || 'https://www.facebook.com/',
-    siteName:       'Vital Life'
-  }
-};
-
-function load() {
-  try {
-    if (fs.existsSync(DB_PATH)) {
-      return JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
-    }
-  } catch (_) {}
-  return JSON.parse(JSON.stringify(DEFAULT));
+if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+  console.error('❌ Faltan variables SUPABASE_URL y/o SUPABASE_SERVICE_KEY en .env');
+  process.exit(1);
 }
 
-function save(db) {
-  fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
-}
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-let _db = load();
-
-module.exports = {
-  get: ()         => _db,
-  save: ()        => save(_db),
-  reset: ()       => { _db = JSON.parse(JSON.stringify(DEFAULT)); save(_db); }
-};
+module.exports = supabase;

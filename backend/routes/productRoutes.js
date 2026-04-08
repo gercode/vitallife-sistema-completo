@@ -6,19 +6,10 @@ const router  = express.Router();
 const ctrl    = require('../controllers/productController');
 const { authMiddleware } = require('../middleware/auth');
 const multer  = require('multer');
-const path    = require('path');
-const { v4: uuidv4 } = require('uuid');
 
-// Configurar Multer para subida de imágenes
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, path.join(__dirname, '..', 'uploads')),
-  filename:    (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    cb(null, `product-${uuidv4()}${ext}`);
-  }
-});
+// Multer en modo memoria (buffer) para subir a Supabase Storage
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
   fileFilter: (req, file, cb) => {
     if (/image\/(jpeg|png|webp|gif)/.test(file.mimetype)) cb(null, true);

@@ -1,54 +1,104 @@
 /**
  * models/Product.js
- * Modelo de Producto
+ * Modelo de Producto – Supabase (PostgreSQL)
  */
-const { v4: uuidv4 } = require('uuid');
-const db = require('../config/db');
+const supabase = require('../config/db');
+
+const TABLE = 'products';
+
+// Convierte snake_case de la BD a camelCase para la API
+function toCamel(row) {
+  if (!row) return null;
+  return {
+    id:          row.id,
+    name:        row.name,
+    brand:       row.brand,
+    category:    row.category,
+    description: row.description,
+    benefits:    row.benefits || [],
+    image:       row.image,
+    price:       parseFloat(row.price) || 0,
+    discount:    parseFloat(row.discount) || 0,
+    active:      row.active,
+    infoSection: row.info_section || null,
+    createdAt:   row.created_at,
+    updatedAt:   row.updated_at
+  };
+}
 
 const Product = {
 
-  findAll() {
-    return db.get().products;
+  async findAll() {
+    const { data, error } = await supabase
+      .from(TABLE)
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return (data || []).map(toCamel);
   },
 
-  findById(id) {
-    return db.get().products.find(p => p.id === id) || null;
+  async findById(id) {
+    const { data, error } = await supabase
+      .from(TABLE)
+      .select('*')
+      .eq('id', id)
+      .single();
+    if (error && error.code !== 'PGRST116') throw error;
+    return toCamel(data);
   },
 
-  create({ name, brand, category, description, benefits, image, price, discount, active = true, infoSection }) {
-    const product = {
-      id:          uuidv4(),
-      name:        name || '',
-      brand:       brand || '',
-      category:    category || 'general',
-      description: description || '',
-      benefits:    Array.isArray(benefits) ? benefits : [],
-      image:       image || null,
-      price:       parseFloat(price) || 0,
-      discount:    parseFloat(discount) || 0,
-      active:      Boolean(active),
-      infoSection: infoSection || null,
-      createdAt:   new Date().toISOString()
+  async create({ name, brand, category, description, benefits, image, price, discount, active = true, infoSection }) {
+    const row = {
+      name:         name || '',
+      brand:        brand || '',
+      category:     category || 'general',
+      description:  description || '',
+      benefits:     Array.isArray(benefits) ? benefits : [],
+      image:        image || null,
+      price:        parseFloat(price) || 0,
+      discount:     parseFloat(discount) || 0,
+      active:       Boolean(active),
+      info_section: infoSection || null
     };
-    db.get().products.push(product);
-    db.save();
-    return product;
+    const { data, error } = await supabase
+      .from(TABLE)
+      .insert(row)
+      .select()
+      .single();
+    if (error) throw error;
+    return toCamel(data);
   },
 
-  update(id, data) {
-    const idx = db.get().products.findIndex(p => p.id === id);
-    if (idx === -1) return null;
-    const updated = { ...db.get().products[idx], ...data, id, updatedAt: new Date().toISOString() };
-    db.get().products[idx] = updated;
-    db.save();
-    return updated;
+  async update(id, fields) {
+    const row = {};
+    if (fields.name !== undefined)        row.name         = fields.name;
+    if (fields.brand !== undefined)       row.brand        = fields.brand;
+    if (fields.category !== undefined)    row.category     = fields.category;
+    if (fields.description !== undefined) row.description  = fields.description;
+    if (fields.benefits !== undefined)    row.benefits     = fields.benefits;
+    if (fields.image !== undefined)       row.image        = fields.image;
+    if (fields.price !== undefined)       row.price        = parseFloat(fields.price) || 0;
+    if (fields.discount !== undefined)    row.discount     = parseFloat(fields.discount) || 0;
+    if (fields.active !== undefined)      row.active       = fields.active;
+    if (fields.infoSection !== undefined) row.info_section = fields.infoSection;
+    row.updated_at = new Date().toISOString();
+
+    const { data, error } = await supabase
+      .from(TABLE)
+      .update(row)
+      .eq('id', id)
+      .select()
+      .single();
+    if (error && error.code !== 'PGRST116') throw error;
+    return toCamel(data);
   },
 
-  delete(id) {
-    const idx = db.get().products.findIndex(p => p.id === id);
-    if (idx === -1) return false;
-    db.get().products.splice(idx, 1);
-    db.save();
+  async delete(id) {
+    const { error, count } = await supabase
+      .from(TABLE)
+      .delete()
+      .eq('id', id);
+    if (error) throw error;
     return true;
   }
 };

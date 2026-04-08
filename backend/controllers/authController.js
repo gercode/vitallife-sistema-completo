@@ -2,7 +2,7 @@
  * controllers/authController.js
  */
 const { generateToken, ADMIN_USER, ADMIN_PASS } = require('../middleware/auth');
-const db = require('../config/db');
+const supabase = require('../config/db');
 
 exports.login = (req, res) => {
   const { user, pass } = req.body;
@@ -14,24 +14,66 @@ exports.login = (req, res) => {
 };
 
 exports.logout = (req, res) => {
-  // Con JWT no hay necesidad de invalidar en el backend
   res.json({ ok: true });
 };
 
-exports.getSettingsPublic = (req, res) => {
-  res.json(db.get().settings);
+exports.getSettingsPublic = async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('settings')
+      .select('*')
+      .eq('id', 1)
+      .single();
+    if (error) throw error;
+    res.json({
+      whatsappNumber: data.whatsapp_number,
+      facebookUrl:    data.facebook_url,
+      siteName:       data.site_name
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-exports.getSettings = (req, res) => {
-  res.json(db.get().settings);
+exports.getSettings = async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('settings')
+      .select('*')
+      .eq('id', 1)
+      .single();
+    if (error) throw error;
+    res.json({
+      whatsappNumber: data.whatsapp_number,
+      facebookUrl:    data.facebook_url,
+      siteName:       data.site_name
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-exports.updateSettings = (req, res) => {
-  const s = db.get().settings;
-  const { whatsappNumber, facebookUrl, siteName } = req.body;
-  if (whatsappNumber) s.whatsappNumber = whatsappNumber;
-  if (facebookUrl)    s.facebookUrl    = facebookUrl;
-  if (siteName)       s.siteName       = siteName;
-  db.save();
-  res.json(s);
+exports.updateSettings = async (req, res) => {
+  try {
+    const { whatsappNumber, facebookUrl, siteName } = req.body;
+    const row = {};
+    if (whatsappNumber) row.whatsapp_number = whatsappNumber;
+    if (facebookUrl)    row.facebook_url    = facebookUrl;
+    if (siteName)       row.site_name       = siteName;
+
+    const { data, error } = await supabase
+      .from('settings')
+      .update(row)
+      .eq('id', 1)
+      .select()
+      .single();
+    if (error) throw error;
+    res.json({
+      whatsappNumber: data.whatsapp_number,
+      facebookUrl:    data.facebook_url,
+      siteName:       data.site_name
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
