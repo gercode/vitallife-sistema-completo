@@ -33,7 +33,8 @@ router.get('/:id', ctrl.getOne);
 // Rutas protegidas (admin)
 const uploadFields = upload.fields([
   { name: 'image', maxCount: 1 },
-  { name: 'infoSectionImage', maxCount: 1 }
+  { name: 'infoSectionImage1', maxCount: 1 },
+  { name: 'infoSectionImage2', maxCount: 1 }
 ]);
 router.post('/',     authMiddleware, uploadFields, ctrl.create);
 router.put('/:id',  authMiddleware, uploadFields, ctrl.update);

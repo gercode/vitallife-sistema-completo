@@ -249,17 +249,31 @@ function openProductModal(product = null) {
   document.getElementById('pInfoTechLabel').value = info.techLabel || '';
   document.getElementById('pInfoTechName').value  = info.techName || '';
   document.getElementById('pInfoItems').value     = (info.items || []).join('\n');
-  document.getElementById('pInfoImage').value     = '';
-  const infoPrev = document.getElementById('infoImagePreview');
-  const infoPlch = document.getElementById('infoImageUploadPlaceholder');
-  if (info.image) {
-    infoPrev.src = CONFIG.API_BASE.replace('/api','') + info.image;
-    infoPrev.classList.remove('d-none');
-    infoPlch.classList.add('d-none');
+  document.getElementById('pInfoImage1').value    = '';
+  document.getElementById('pInfoImage2').value    = '';
+  // Imagen 1
+  const info1Prev = document.getElementById('infoImage1Preview');
+  const info1Plch = document.getElementById('infoImage1UploadPlaceholder');
+  if (info.image1) {
+    info1Prev.src = CONFIG.API_BASE.replace('/api','') + info.image1;
+    info1Prev.classList.remove('d-none');
+    info1Plch.classList.add('d-none');
   } else {
-    infoPrev.src = '';
-    infoPrev.classList.add('d-none');
-    infoPlch.classList.remove('d-none');
+    info1Prev.src = '';
+    info1Prev.classList.add('d-none');
+    info1Plch.classList.remove('d-none');
+  }
+  // Imagen 2
+  const info2Prev = document.getElementById('infoImage2Preview');
+  const info2Plch = document.getElementById('infoImage2UploadPlaceholder');
+  if (info.image2) {
+    info2Prev.src = CONFIG.API_BASE.replace('/api','') + info.image2;
+    info2Prev.classList.remove('d-none');
+    info2Plch.classList.add('d-none');
+  } else {
+    info2Prev.src = '';
+    info2Prev.classList.add('d-none');
+    info2Plch.classList.remove('d-none');
   }
   // Collapse info section by default, expand if has data
   const infoFields = document.getElementById('infoSectionFields');
@@ -311,12 +325,14 @@ async function saveProduct() {
   const infoItems    = document.getElementById('pInfoItems').value.split('\n').map(i => i.trim()).filter(Boolean);
 
   if (infoTitle || infoSubtitle || infoTechName || infoItems.length) {
-    // Preserve existing image path if no new image
-    let existingInfoImage = null;
+    // Preserve existing image paths if no new images
+    let existingInfoImage1 = null;
+    let existingInfoImage2 = null;
     if (id) {
       try {
         const existing = await API.getProduct(id);
-        existingInfoImage = existing?.infoSection?.image || null;
+        existingInfoImage1 = existing?.infoSection?.image1 || null;
+        existingInfoImage2 = existing?.infoSection?.image2 || null;
       } catch (_) {}
     }
     fd.append('infoSection', JSON.stringify({
@@ -326,13 +342,16 @@ async function saveProduct() {
       techLabel: infoTechLabel,
       techName: infoTechName,
       items: infoItems,
-      image: existingInfoImage
+      image1: existingInfoImage1,
+      image2: existingInfoImage2
     }));
   } else {
     fd.append('infoSection', 'null');
   }
-  const infoFile = document.getElementById('pInfoImage').files[0];
-  if (infoFile) fd.append('infoSectionImage', infoFile);
+  const infoFile1 = document.getElementById('pInfoImage1').files[0];
+  if (infoFile1) fd.append('infoSectionImage1', infoFile1);
+  const infoFile2 = document.getElementById('pInfoImage2').files[0];
+  if (infoFile2) fd.append('infoSectionImage2', infoFile2);
 
   const btn = document.getElementById('saveProductBtn');
   btn.disabled = true;
@@ -394,21 +413,23 @@ function setupImageDrop() {
     }
   });
 
-  // Drag & drop para imagen de sección informativa
-  const infoArea = document.getElementById('infoImageUploadArea');
-  if (!infoArea) return;
-  infoArea.addEventListener('dragover', e => { e.preventDefault(); infoArea.style.borderColor = '#2d6a4f'; });
-  infoArea.addEventListener('dragleave', () => { infoArea.style.borderColor = ''; });
-  infoArea.addEventListener('drop', e => {
-    e.preventDefault(); infoArea.style.borderColor = '';
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      const input = document.getElementById('pInfoImage');
-      const dt = new DataTransfer();
-      dt.items.add(file);
-      input.files = dt.files;
-      previewInfoImage(input);
-    }
+  // Drag & drop para imágenes de sección informativa
+  [1, 2].forEach(n => {
+    const area = document.getElementById(`infoImage${n}UploadArea`);
+    if (!area) return;
+    area.addEventListener('dragover', e => { e.preventDefault(); area.style.borderColor = '#2d6a4f'; });
+    area.addEventListener('dragleave', () => { area.style.borderColor = ''; });
+    area.addEventListener('drop', e => {
+      e.preventDefault(); area.style.borderColor = '';
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const input = document.getElementById(`pInfoImage${n}`);
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+        previewInfoImg(input, n);
+      }
+    });
   });
 }
 
@@ -420,14 +441,14 @@ function toggleInfoSection() {
   icon.className = fields.classList.contains('d-none') ? 'bi bi-chevron-down' : 'bi bi-chevron-up';
 }
 
-// Preview imagen de sección informativa
-function previewInfoImage(input) {
+// Preview imagen de sección informativa (1 o 2)
+function previewInfoImg(input, num) {
   const file = input.files[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = e => {
-    const prev = document.getElementById('infoImagePreview');
-    const plch = document.getElementById('infoImageUploadPlaceholder');
+    const prev = document.getElementById(`infoImage${num}Preview`);
+    const plch = document.getElementById(`infoImage${num}UploadPlaceholder`);
     prev.src = e.target.result;
     prev.classList.remove('d-none');
     plch.classList.add('d-none');

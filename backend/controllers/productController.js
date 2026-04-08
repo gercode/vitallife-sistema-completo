@@ -46,14 +46,18 @@ exports.create = (req, res) => {
           techLabel:   parsed.techLabel || '',
           techName:    parsed.techName || '',
           items:       Array.isArray(parsed.items) ? parsed.items : [],
-          image:       parsed.image || null
+          image1:      parsed.image1 || null,
+          image2:      parsed.image2 || null
         };
       }
     } catch (_) {}
 
     const image = req.files?.image?.[0] ? `/uploads/${req.files.image[0].filename}` : null;
-    if (infoSection && req.files?.infoSectionImage?.[0]) {
-      infoSection.image = `/uploads/${req.files.infoSectionImage[0].filename}`;
+    if (infoSection && req.files?.infoSectionImage1?.[0]) {
+      infoSection.image1 = `/uploads/${req.files.infoSectionImage1[0].filename}`;
+    }
+    if (infoSection && req.files?.infoSectionImage2?.[0]) {
+      infoSection.image2 = `/uploads/${req.files.infoSectionImage2[0].filename}`;
     }
 
     const product = Product.create({ name, brand, category, description, benefits, image, price, discount, active, infoSection });
@@ -81,7 +85,8 @@ exports.update = (req, res) => {
             techLabel:   parsed.techLabel || '',
             techName:    parsed.techName || '',
             items:       Array.isArray(parsed.items) ? parsed.items : [],
-            image:       parsed.image || null
+            image1:      parsed.image1 || null,
+            image2:      parsed.image2 || null
           };
         } else {
           infoSection = null;
@@ -91,11 +96,15 @@ exports.update = (req, res) => {
 
     const data = { ...req.body, benefits };
     if (infoSection !== undefined) data.infoSection = infoSection;
-    delete data.infoSectionImage;
+    delete data.infoSectionImage1;
+    delete data.infoSectionImage2;
 
     if (req.files?.image?.[0]) data.image = `/uploads/${req.files.image[0].filename}`;
-    if (infoSection && req.files?.infoSectionImage?.[0]) {
-      data.infoSection.image = `/uploads/${req.files.infoSectionImage[0].filename}`;
+    if (infoSection && req.files?.infoSectionImage1?.[0]) {
+      data.infoSection.image1 = `/uploads/${req.files.infoSectionImage1[0].filename}`;
+    }
+    if (infoSection && req.files?.infoSectionImage2?.[0]) {
+      data.infoSection.image2 = `/uploads/${req.files.infoSectionImage2[0].filename}`;
     }
     if (data.active !== undefined) data.active = data.active === 'true' || data.active === true;
     if (data.price !== undefined) data.price = parseFloat(data.price) || 0;

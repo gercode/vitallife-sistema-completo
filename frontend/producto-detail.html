@@ -463,7 +463,9 @@ function renderInfoSection(product) {
   if (!info || (!info.title && !info.subtitle && !info.techName)) return;
 
   const baseUrl = CONFIG.API_BASE.replace('/api', '');
-  const imgSrc = info.image ? baseUrl + info.image : (product.image ? baseUrl + product.image : '');
+  const fallback = product.image ? baseUrl + product.image : '';
+  const img1Src = info.image1 ? baseUrl + info.image1 : fallback;
+  const img2Src = info.image2 ? baseUrl + info.image2 : fallback;
 
   if (info.title) document.getElementById('infoTitle').textContent = info.title;
   if (info.subtitle) document.getElementById('infoSubtitle').textContent = info.subtitle;
@@ -471,10 +473,8 @@ function renderInfoSection(product) {
   if (info.techLabel) document.getElementById('infoTechLabel').textContent = info.techLabel;
   if (info.techName) document.getElementById('infoTechName').textContent = info.techName;
 
-  if (imgSrc) {
-    document.getElementById('infoImage').src = imgSrc;
-    document.getElementById('infoImage2').src = imgSrc;
-  }
+  if (img1Src) document.getElementById('infoImage').src = img1Src;
+  if (img2Src) document.getElementById('infoImage2').src = img2Src;
 
   // Beneficios/items
   const itemsList = document.getElementById('infoItems');

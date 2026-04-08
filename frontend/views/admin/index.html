@@ -297,16 +297,27 @@
                     <label class="form-label fw-bold">Beneficios / Características <small class="text-muted">(uno por línea)</small></label>
                     <textarea class="form-control" id="pInfoItems" rows="5" placeholder="Alivia la inflamación, tensión, sequedad e irritación&#10;Mejora la agudeza visual, fortalece la retina del ojo&#10;Estimula las sinapsis nerviosas que proporcionan una visión clara"></textarea>
                   </div>
-                  <div class="col-12">
-                    <label class="form-label fw-bold">Imagen de la sección <small class="text-muted">(opcional, usa la principal si no se sube)</small></label>
-                    <div class="image-upload-area" id="infoImageUploadArea" onclick="document.getElementById('pInfoImage').click()" style="min-height:120px;">
-                      <img id="infoImagePreview" src="" alt="" class="d-none" style="max-height:150px;object-fit:contain;"/>
-                      <div id="infoImageUploadPlaceholder">
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">Imagen 1 – Bloque superior <small class="text-muted">(junto al título)</small></label>
+                    <div class="image-upload-area" id="infoImage1UploadArea" onclick="document.getElementById('pInfoImage1').click()" style="min-height:120px;">
+                      <img id="infoImage1Preview" src="" alt="" class="d-none" style="max-height:150px;object-fit:contain;"/>
+                      <div id="infoImage1UploadPlaceholder">
                         <i class="bi bi-cloud-arrow-up fs-3 text-muted"></i>
-                        <p class="mb-0 text-muted mt-1" style="font-size:.85rem;">Imagen para la sección informativa</p>
+                        <p class="mb-0 text-muted mt-1" style="font-size:.85rem;">Imagen bloque superior</p>
                       </div>
                     </div>
-                    <input type="file" id="pInfoImage" accept="image/*" class="d-none" onchange="previewInfoImage(this)"/>
+                    <input type="file" id="pInfoImage1" accept="image/*" class="d-none" onchange="previewInfoImg(this, 1)"/>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label fw-bold">Imagen 2 – Bloque tecnología <small class="text-muted">(junto a beneficios)</small></label>
+                    <div class="image-upload-area" id="infoImage2UploadArea" onclick="document.getElementById('pInfoImage2').click()" style="min-height:120px;">
+                      <img id="infoImage2Preview" src="" alt="" class="d-none" style="max-height:150px;object-fit:contain;"/>
+                      <div id="infoImage2UploadPlaceholder">
+                        <i class="bi bi-cloud-arrow-up fs-3 text-muted"></i>
+                        <p class="mb-0 text-muted mt-1" style="font-size:.85rem;">Imagen bloque tecnología</p>
+                      </div>
+                    </div>
+                    <input type="file" id="pInfoImage2" accept="image/*" class="d-none" onchange="previewInfoImg(this, 2)"/>
                   </div>
                 </div>
               </div>
