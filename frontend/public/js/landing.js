@@ -104,7 +104,7 @@ async function loadProducts() {
 
 function renderProductCard(p) {
   const imgHTML = p.image
-    ? `<img src="${CONFIG.API_BASE.replace('/api','')}${p.image}" alt="${p.name}" loading="lazy"/>`
+    ? `<img src="${imgUrl(p.image)}" alt="${p.name}" loading="lazy"/>`
     : `<div class="product-img-placeholder">💊</div>`;
 
   const benefits = (p.benefits || []).map(b =>

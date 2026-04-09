@@ -179,7 +179,7 @@ async function loadProductsAdmin() {
 }
 
 function renderProductAdminCard(p) {
-  const imgSrc   = p.image ? `${CONFIG.API_BASE.replace('/api','')}${p.image}` : null;
+  const imgSrc   = p.image ? imgUrl(p.image) : null;
   const imgHTML  = imgSrc
     ? `<div class="product-admin-img"><img src="${imgSrc}" alt="${escHtml(p.name)}"/></div>`
     : `<div class="product-admin-img">💊</div>`;
@@ -232,7 +232,7 @@ function openProductModal(product = null) {
   const prev = document.getElementById('imagePreview');
   const plch = document.getElementById('imageUploadPlaceholder');
   if (product?.image) {
-    prev.src = CONFIG.API_BASE.replace('/api','') + product.image;
+    prev.src = imgUrl(product.image);
     prev.classList.remove('d-none');
     plch.classList.add('d-none');
   } else {
@@ -255,7 +255,7 @@ function openProductModal(product = null) {
   const info1Prev = document.getElementById('infoImage1Preview');
   const info1Plch = document.getElementById('infoImage1UploadPlaceholder');
   if (info.image1) {
-    info1Prev.src = CONFIG.API_BASE.replace('/api','') + info.image1;
+    info1Prev.src = imgUrl(info.image1);
     info1Prev.classList.remove('d-none');
     info1Plch.classList.add('d-none');
   } else {
@@ -267,7 +267,7 @@ function openProductModal(product = null) {
   const info2Prev = document.getElementById('infoImage2Preview');
   const info2Plch = document.getElementById('infoImage2UploadPlaceholder');
   if (info.image2) {
-    info2Prev.src = CONFIG.API_BASE.replace('/api','') + info.image2;
+    info2Prev.src = imgUrl(info.image2);
     info2Prev.classList.remove('d-none');
     info2Plch.classList.add('d-none');
   } else {
